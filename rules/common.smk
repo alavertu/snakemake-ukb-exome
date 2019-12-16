@@ -37,12 +37,12 @@ def get_contigs():
                          header=None, usecols=[0], squeeze=True, dtype=str)
 
 def get_cram(wildcards):
-    cram = units.loc[(wildcards.sample, wildcards.unit), ["cram"]].dropna()
-    return(cram)
+    dat = units.loc[(wildcards.sample, wildcards.unit), ["cram"]].dropna()
+    return(dat.cram)
 
 def get_fastq(wildcards):
     """Get all aligned reads of given sample."""
-    return {"r1": "fastq/{sample}-{unit}.sorted.1.fq".format(sample=wildcards.sample, unit=wildcard.unit), "r2": "fastq/{sample}-{unit}.sorted.2.fq".format(sample=wildcards.sample, unit=wildcards.unit)}
+    return {"r1": "fastq/{sample}.sorted.1.fq".format(sample=wildcards.sample, unit=wildcards.unit), "r2": "fastq/{sample}.sorted.2.fq".format(sample=wildcards.sample, unit=wildcards.unit)}
 
 def get_read_group(wildcards):
     """Denote sample name and platform in read group."""
@@ -53,15 +53,15 @@ def get_read_group(wildcards):
 
 def get_trimmed_reads(wildcards):
     """Get trimmed reads of given sample-unit."""
-    return expand("trimmed/{sample}-{unit}.{group}.fastq.gz",
+    return expand("trimmed/{sample}.{group}.fastq.gz",
                     group=[1, 2], **wildcards)
     # single end sample
-    return "trimmed/{sample}-{unit}.fastq.gz".format(**wildcards)
+    return "trimmed/{sample}.fastq.gz".format(**wildcards)
 
 
 def get_sample_bams(wildcards):
     """Get all aligned reads of given sample."""
-    return expand("recal/{sample}-{unit}.bam",
+    return expand("recal/{sample}.bam",
                   sample=wildcards.sample,
                   unit=units.loc[wildcards.sample].unit)
 
@@ -83,10 +83,10 @@ def get_call_variants_params(wildcards, input):
 
 def get_recal_input(bai=False):
     # case 1: no duplicate removal
-    f = "mapped/{sample}-{unit}.sorted.bam"
+    f = "mapped/{sample}.sorted.bam"
     if config["processing"]["remove-duplicates"]:
         # case 2: remove duplicates
-        f = "dedup/{sample}-{unit}.bam"
+        f = "dedup/{sample}.bam"
     if bai:
         if config["processing"].get("restrict-regions"):
             # case 3: need an index because random access is required
