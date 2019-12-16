@@ -43,7 +43,7 @@ def get_cram(wildcards):
 
 def get_fastq(wildcards):
     """Get all aligned reads of given sample."""
-    return {"r1": "data/fastq/{sample}-{unit}.sorted.1.fq", "r2": "data/fastq/{sample}-{unit}.sorted.2.fq"}
+    return {"r1": "fastq/{sample}-{unit}.sorted.1.fq", "r2": "fastq/{sample}-{unit}.sorted.2.fq"}
 
 def get_read_group(wildcards):
     """Denote sample name and platform in read group."""
@@ -54,15 +54,15 @@ def get_read_group(wildcards):
 
 def get_trimmed_reads(wildcards):
     """Get trimmed reads of given sample-unit."""
-    return expand("data/trimmed/{sample}-{unit}.{group}.fastq.gz",
+    return expand("trimmed/{sample}-{unit}.{group}.fastq.gz",
                     group=[1, 2], **wildcards)
     # single end sample
-    return "data/trimmed/{sample}-{unit}.fastq.gz".format(**wildcards)
+    return "trimmed/{sample}-{unit}.fastq.gz".format(**wildcards)
 
 
 def get_sample_bams(wildcards):
     """Get all aligned reads of given sample."""
-    return expand("data/recal/{sample}-{unit}.bam",
+    return expand("recal/{sample}-{unit}.bam",
                   sample=wildcards.sample,
                   unit=units.loc[wildcards.sample].unit)
 
@@ -84,10 +84,10 @@ def get_call_variants_params(wildcards, input):
 
 def get_recal_input(bai=False):
     # case 1: no duplicate removal
-    f = "data/mapped/{sample}-{unit}.sorted.bam"
+    f = "mapped/{sample}-{unit}.sorted.bam"
     if config["processing"]["remove-duplicates"]:
         # case 2: remove duplicates
-        f = "data/dedup/{sample}-{unit}.bam"
+        f = "dedup/{sample}-{unit}.bam"
     if bai:
         if config["processing"].get("restrict-regions"):
             # case 3: need an index because random access is required
