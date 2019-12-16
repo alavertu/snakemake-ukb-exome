@@ -1,11 +1,11 @@
 rule snpeff:
     input:
-        "filtered/all.vcf.gz",
+        "data/filtered/all.vcf.gz",
     output:
-        vcf=report("annotated/all.vcf.gz", caption="../report/vcf.rst", category="Calls"),
-        csvstats="snpeff/all.csv"
+        vcf=report("data/annotated/all.vcf.gz", caption="../data/report/vcf.rst", category="Calls"),
+        csvstats="data/snpeff/all.csv"
     log:
-        "logs/snpeff.log"
+        "data/logs/snpeff.log"
     params:
         reference=config["ref"]["name"],
         extra="-Xmx6g"

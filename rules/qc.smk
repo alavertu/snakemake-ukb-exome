@@ -2,33 +2,33 @@ rule fastqc:
     input:
         unpack(get_fastq)
     output:
-        html="qc/fastqc/{sample}-{unit}.html",
-        zip="qc/fastqc/{sample}-{unit}.zip"
+        html="data/qc/fastqc/{sample}.html",
+        zip="data/qc/fastqc/{sample}.zip"
     wrapper:
         "0.27.1/bio/fastqc"
 
 
 rule samtools_stats:
     input:
-        "recal/{sample}-{unit}.bam"
+        "data/recal/{sample}.bam"
     output:
-        "qc/samtools-stats/{sample}-{unit}.txt"
+        "data/qc/samtools-stats/{sample}.txt"
     log:
-        "logs/samtools-stats/{sample}-{unit}.log"
+        "data/logs/samtools-stats/{sample}.log"
     wrapper:
         "0.27.1/bio/samtools/stats"
 
 
 rule multiqc:
     input:
-        expand(["qc/samtools-stats/{u.sample}-{u.unit}.txt",
-                "qc/fastqc/{u.sample}-{u.unit}.zip",
-                "qc/dedup/{u.sample}-{u.unit}.metrics.txt"],
-               u=units.itertuples()),
-        "snpeff/all.csv"
+         expand(["data/qc/samtools-stats/{u.sample}.txt",
+                 "data/qc/fastqc/{u.sample}.zip",
+                 "data/qc/dedup/{u.sample}.metrics.txt"],
+                u=units.itertuples()),
+         "data/snpeff/all.csv"
     output:
-        report("qc/multiqc.html", caption="../report/multiqc.rst", category="Quality control")
+          report("data/qc/multiqc.html", caption="../report/multiqc.rst", category="Quality control")
     log:
-        "logs/multiqc.log"
+       "data/logs/multiqc.log"
     wrapper:
-        "0.27.1/bio/multiqc"
+           "0.27.1/bio/multiqc"

@@ -21,8 +21,7 @@ validate(units, schema="../schemas/units.schema.yaml")
 ##### Wildcard constraints #####
 wildcard_constraints:
     vartype="snvs|indels",
-    sample="|".join(samples.index),
-    unit="|".join(units["unit"])
+    sample="|".join(samples.index)
 
 
 ##### Helper functions #####
@@ -37,12 +36,12 @@ def get_contigs():
                          header=None, usecols=[0], squeeze=True, dtype=str)
 
 def get_cram(wildcards):
-    dat = units.loc[(wildcards.sample, wildcards.unit), ["cram"]].dropna()
+    dat = units.loc[(wildcards.sample), ["cram"]].dropna()
     return(dat.cram)
 
 def get_fastq(wildcards):
     """Get all aligned reads of given sample."""
-    return {"r1": "fastq/{sample}.sorted.1.fq".format(sample=wildcards.sample, unit=wildcards.unit), "r2": "fastq/{sample}.sorted.2.fq".format(sample=wildcards.sample, unit=wildcards.unit)}
+    return {"r1": "data/fastq/{sample}.sorted.1.fq".format(sample=wildcards.sample), "r2": "data/fastq/{sample}.sorted.2.fq".format(sample=wildcards.sample)}
 
 def get_read_group(wildcards):
     """Denote sample name and platform in read group."""
@@ -50,18 +49,17 @@ def get_read_group(wildcards):
         sample=wildcards.sample,
         platform=units.loc[(wildcards.sample, wildcards.unit), "platform"])
 
-
 def get_trimmed_reads(wildcards):
     """Get trimmed reads of given sample-unit."""
-    return expand("trimmed/{sample}.{group}.fastq.gz",
+    return expand("data/trimmed/{sample}.{group}.fastq.gz",
                     group=[1, 2], **wildcards)
     # single end sample
-    return "trimmed/{sample}.fastq.gz".format(**wildcards)
+    return "data/trimmed/{sample}.fastq.gz".format(**wildcards)
 
 
 def get_sample_bams(wildcards):
     """Get all aligned reads of given sample."""
-    return expand("recal/{sample}.bam",
+    return expand("data/recal/{sample}.bam",
                   sample=wildcards.sample,
                   unit=units.loc[wildcards.sample].unit)
 
@@ -83,10 +81,10 @@ def get_call_variants_params(wildcards, input):
 
 def get_recal_input(bai=False):
     # case 1: no duplicate removal
-    f = "mapped/{sample}.sorted.bam"
+    f = "data/mapped/{sample}.sorted.bam"
     if config["processing"]["remove-duplicates"]:
         # case 2: remove duplicates
-        f = "dedup/{sample}.bam"
+        f = "data/dedup/{sample}.bam"
     if bai:
         if config["processing"].get("restrict-regions"):
             # case 3: need an index because random access is required
