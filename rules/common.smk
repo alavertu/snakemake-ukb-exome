@@ -37,13 +37,12 @@ def get_contigs():
                          header=None, usecols=[0], squeeze=True, dtype=str)
 
 def get_cram(wildcards):
-    print(wildcards)
     cram = units.loc[(wildcards.sample, wildcards.unit), ["cram"]].dropna()
     return(cram)
 
 def get_fastq(wildcards):
     """Get all aligned reads of given sample."""
-    return {"r1": "fastq/{sample}-{unit}.sorted.1.fq", "r2": "fastq/{sample}-{unit}.sorted.2.fq"}
+    return {"r1": "fastq/{sample}-{unit}.sorted.1.fq".format(sample=wildcards.sample, unit=wildcard.unit), "r2": "fastq/{sample}-{unit}.sorted.2.fq".format(sample=wildcards.sample, unit=wildcards.unit)}
 
 def get_read_group(wildcards):
     """Denote sample name and platform in read group."""

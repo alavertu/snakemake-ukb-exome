@@ -12,7 +12,7 @@ rule sort_sam:
     input:
          "sam_files/{sample}-{unit}.sam"
     output:
-          "sam_files/{sample}-{unit}.sorted.sam"
+         "sam_files/{sample}-{unit}.sorted.sam"
     shell:
         "samtools collate -o {output} {input}"
 
