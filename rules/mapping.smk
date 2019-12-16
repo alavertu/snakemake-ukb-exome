@@ -1,16 +1,30 @@
-rule trim_reads_se:
+rule revert_cram_to_sam:
     input:
-        unpack(get_fastq)
+         unpack(get_cram)
     output:
-        temp("trimmed/{sample}-{unit}.fastq.gz")
+          "{sample}-{unit}.sam"
     params:
-        extra="",
-        **config["params"]["trimmomatic"]["se"]
-    log:
-        "logs/trimmomatic/{sample}-{unit}.log"
+          "-h -t /oak/stanford/groups/rbaltman/references/GRCh38/GRCh38_full_analysis_set_plus_decoy_hla.fa.fai" # optional params string
     wrapper:
-        "0.30.0/bio/trimmomatic/se"
+           "0.43.1/bio/samtools/view"
 
+rule sort_sam:
+    input:
+        "{sample}-{unit}.sam"
+    output:
+        "{sample}-{unit}.sorted.sam"
+    shell:
+        "samtools collate -o {output} {input}"
+
+rule sam_to_fastq:
+    input:
+         "{sample}-{unit}.sorted.sam"
+    output:
+          single="{sample}-{unit}.sorted.single",
+          pe1="fastq/{sample}-{unit}.sorted.1.fq",
+          pe2="fastq/{sample}-{unit}.sorted.2.fq"
+    shell:
+         "samtools fastq -s {output.single} -1 {output.pe1} -2 {output.pe2} {input}"
 
 rule trim_reads_pe:
     input:
@@ -18,8 +32,6 @@ rule trim_reads_pe:
     output:
         r1=temp("trimmed/{sample}-{unit}.1.fastq.gz"),
         r2=temp("trimmed/{sample}-{unit}.2.fastq.gz"),
-        r1_unpaired=temp("trimmed/{sample}-{unit}.1.unpaired.fastq.gz"),
-        r2_unpaired=temp("trimmed/{sample}-{unit}.2.unpaired.fastq.gz"),
         trimlog="trimmed/{sample}-{unit}.trimlog.txt"
     params:
         extra=lambda w, output: "-trimlog {}".format(output.trimlog),

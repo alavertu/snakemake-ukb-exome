@@ -36,32 +36,26 @@ def get_contigs():
     return pd.read_table(get_fai(),
                          header=None, usecols=[0], squeeze=True, dtype=str)
 
+def get_cram(wildcards):
+    print(wildcards)
+    cram = units.loc[(wildcards.sample, wildcards.unit), ["cram"]].dropna()
+    return(cram)
+
 def get_fastq(wildcards):
-    """Get fastq files of given sample-unit."""
-    fastqs = units.loc[(wildcards.sample, wildcards.unit), ["fq1", "fq2"]].dropna()
-    if len(fastqs) == 2:
-        return {"r1": fastqs.fq1, "r2": fastqs.fq2}
-    return {"r1": fastqs.fq1}
-
-
-def is_single_end(sample, unit):
-    """Return True if sample-unit is single end."""
-    return pd.isnull(units.loc[(sample, unit), "fq2"])
-
+    """Get all aligned reads of given sample."""
+    return {"r1": "fastq/{sample}-{unit}.sorted.1.fq", "r2": "fastq/{sample}-{unit}.sorted.2.fq"}
 
 def get_read_group(wildcards):
     """Denote sample name and platform in read group."""
-    return r"-R '@RG\tID:{sample}\tSM:{sample}\tPL:{platform}'".format(
+    return r"-M -R '@RG\tID:{sample}\tSM:{sample}\tPL:{platform}'".format(
         sample=wildcards.sample,
         platform=units.loc[(wildcards.sample, wildcards.unit), "platform"])
 
 
 def get_trimmed_reads(wildcards):
     """Get trimmed reads of given sample-unit."""
-    if not is_single_end(**wildcards):
-        # paired-end sample
-        return expand("trimmed/{sample}-{unit}.{group}.fastq.gz",
-                      group=[1, 2], **wildcards)
+    return expand("trimmed/{sample}-{unit}.{group}.fastq.gz",
+                    group=[1, 2], **wildcards)
     # single end sample
     return "trimmed/{sample}-{unit}.fastq.gz".format(**wildcards)
 

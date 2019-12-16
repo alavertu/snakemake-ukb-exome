@@ -11,14 +11,11 @@ properties:
   platform:
     type: string
     enum: ["CAPILLARY", "LS454", "ILLUMINA", "SOLID", "HELICOS", "IONTORRENT", "ONT", "PACBIO"]
-  fq1:
+  cram:
     type: string
-    description: path to FASTQ file
-  fq2:
-    type: string
-    description: path to second FASTQ file (leave empty in case of single-end)
+    description: path to CRAM file
 required:
   - sample
   - unit
   - platform
-  - fq1
+  - cram
