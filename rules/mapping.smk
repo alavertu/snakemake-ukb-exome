@@ -2,7 +2,7 @@ rule revert_cram_to_sam:
     input:
          unpack(get_cram)
     output:
-          "{sample}-{unit}.sam"
+          "data/sam_files/{sample}-{unit}.sam"
     params:
           "-h -t /oak/stanford/groups/rbaltman/references/GRCh38/GRCh38_full_analysis_set_plus_decoy_hla.fa.fai" # optional params string
     wrapper:
@@ -10,19 +10,19 @@ rule revert_cram_to_sam:
 
 rule sort_sam:
     input:
-        "{sample}-{unit}.sam"
+         "data/sam_files/{sample}-{unit}.sam"
     output:
-        "{sample}-{unit}.sorted.sam"
+          "data/sam_files/{sample}-{unit}.sorted.sam"
     shell:
         "samtools collate -o {output} {input}"
 
 rule sam_to_fastq:
     input:
-         "{sample}-{unit}.sorted.sam"
+         "data/sam_files/{sample}-{unit}.sorted.sam"
     output:
-          single="{sample}-{unit}.sorted.single",
-          pe1="fastq/{sample}-{unit}.sorted.1.fq",
-          pe2="fastq/{sample}-{unit}.sorted.2.fq"
+          single="data/fastq/{sample}-{unit}.sorted.single",
+          pe1="data/fastq/{sample}-{unit}.sorted.1.fq",
+          pe2="data/fastq/{sample}-{unit}.sorted.2.fq"
     shell:
          "samtools fastq -s {output.single} -1 {output.pe1} -2 {output.pe2} {input}"
 
@@ -30,9 +30,9 @@ rule trim_reads_pe:
     input:
         unpack(get_fastq)
     output:
-        r1=temp("trimmed/{sample}-{unit}.1.fastq.gz"),
-        r2=temp("trimmed/{sample}-{unit}.2.fastq.gz"),
-        trimlog="trimmed/{sample}-{unit}.trimlog.txt"
+        r1=temp("data/trimmed/{sample}-{unit}.1.fastq.gz"),
+        r2=temp("data/trimmed/{sample}-{unit}.2.fastq.gz"),
+        trimlog="data/trimmed/{sample}-{unit}.trimlog.txt"
     params:
         extra=lambda w, output: "-trimlog {}".format(output.trimlog),
         **config["params"]["trimmomatic"]["pe"]
@@ -46,7 +46,7 @@ rule map_reads:
     input:
         reads=get_trimmed_reads
     output:
-        temp("mapped/{sample}-{unit}.sorted.bam")
+        temp("data/mapped/{sample}-{unit}.sorted.bam")
     log:
         "logs/bwa_mem/{sample}-{unit}.log"
     params:
@@ -61,9 +61,9 @@ rule map_reads:
 
 rule mark_duplicates:
     input:
-        "mapped/{sample}-{unit}.sorted.bam"
+        "data/mapped/{sample}-{unit}.sorted.bam"
     output:
-        bam=temp("dedup/{sample}-{unit}.bam"),
+        bam=temp("data/dedup/{sample}-{unit}.bam"),
         metrics="qc/dedup/{sample}-{unit}.metrics.txt"
     log:
         "logs/picard/dedup/{sample}-{unit}.log"
@@ -80,7 +80,7 @@ rule recalibrate_base_qualities:
         ref=config["ref"]["genome"],
         known=config["ref"]["known-variants"]
     output:
-        bam=protected("recal/{sample}-{unit}.bam")
+        bam=protected("data/recal/{sample}-{unit}.bam")
     params:
         extra=get_regions_param() + config["params"]["gatk"]["BaseRecalibrator"]
     log:
