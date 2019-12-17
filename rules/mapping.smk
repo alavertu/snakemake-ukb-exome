@@ -1,12 +1,12 @@
 rule revert_cram_to_sam:
     input:
-         get_cram
+        get_cram
     output:
-          "data/sam_files/{sample}.sam"
+        "data/sam_files/{sample}.sam"
     params:
-          "-h -t /oak/stanford/groups/rbaltman/references/GRCh38/GRCh38_full_analysis_set_plus_decoy_hla.fa.fai" # optional params string
+        "-h -t /oak/stanford/groups/rbaltman/references/GRCh38/GRCh38_full_analysis_set_plus_decoy_hla.fa.fai" # optional params string
     wrapper:
-           "0.43.1/bio/samtools/view"
+        "0.43.1/bio/samtools/view"
 
 rule sort_sam:
     input:
@@ -14,7 +14,7 @@ rule sort_sam:
     output:
          "data/sam_files/{sample}.sorted.sam"
     shell:
-        "samtools collate -o {output} {input}"
+        "samtools collate {input} > {output}"
 
 rule sam_to_fastq:
     input:

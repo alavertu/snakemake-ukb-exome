@@ -13,8 +13,7 @@ validate(config, schema="../schemas/config.schema.yaml")
 samples = pd.read_table(config["samples"]).set_index("sample", drop=False)
 validate(samples, schema="../schemas/samples.schema.yaml")
 
-units = pd.read_table(config["units"], dtype=str).set_index(["sample", "unit"], drop=False)
-units.index = units.index.set_levels([i.astype(str) for i in units.index.levels])  # enforce str in index
+units = pd.read_table(config["units"], dtype=str).set_index(["sample"], drop=False)  # enforce str in index
 validate(units, schema="../schemas/units.schema.yaml")
 
 
@@ -36,8 +35,8 @@ def get_contigs():
                          header=None, usecols=[0], squeeze=True, dtype=str)
 
 def get_cram(wildcards):
-    dat = units.loc[(wildcards.sample), ["cram"]].dropna()
-    return(dat.cram)
+    df = units.loc[wildcards.sample, ["cram"]].dropna()
+    return(df['cram'])
 
 def get_fastq(wildcards):
     """Get all aligned reads of given sample."""
@@ -47,7 +46,7 @@ def get_read_group(wildcards):
     """Denote sample name and platform in read group."""
     return r"-M -R '@RG\tID:{sample}\tSM:{sample}\tPL:{platform}'".format(
         sample=wildcards.sample,
-        platform=units.loc[(wildcards.sample, wildcards.unit), "platform"])
+        platform=units.loc[(wildcards.sample), "platform"])
 
 def get_trimmed_reads(wildcards):
     """Get trimmed reads of given sample-unit."""
@@ -60,8 +59,7 @@ def get_trimmed_reads(wildcards):
 def get_sample_bams(wildcards):
     """Get all aligned reads of given sample."""
     return expand("data/recal/{sample}.bam",
-                  sample=wildcards.sample,
-                  unit=units.loc[wildcards.sample].unit)
+                  sample=wildcards.sample)
 
 
 def get_regions_param(regions=config["processing"].get("restrict-regions"), default=""):

@@ -8,6 +8,9 @@ ref:
   # Path to any database of known variants, ideally as it is provided by the GATK bundle.
   known-variants: /oak/stanford/groups/rbaltman/references/GATK_BQSR_known_sites_hg38/dbsnp_146.hg38.vcf.gz
 
+mapping:
+  base_dir: /scratch/groups/rbaltman/ukbiobank/aa/
+
 filtering:
   # Set to true in order to apply machine learning based recalibration of
   # quality scores instead of hard filtering.

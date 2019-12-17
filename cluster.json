@@ -2,13 +2,14 @@
     "__default__" :
     {
         "account" : "alavertu",
-        "time" : "24:00:00",
+        "time" : "12:00:00",
         "n" : 1,
-        "partition" : "rbaltman,owners,normal",
-        "mem" : "64G",
+        "partition" : "owners,rbaltman,normal",
+        "mem" : "20G",
         "name" : "ukb_exome.{rule}.{wildcards}",
-        "out" : "/scratch/users/alavertu/snakemake-ukb-exome/data/logs/cluster/{rule}.{wildcards.sample}.out",
-        "error" : "/scratch/users/alavertu/snakemake-ukb-exome/data/logs/cluster/{rule}.{wildcards.sample}.err"
+        "out" : "/scratch/users/alavertu/snakemake-ukb-exome/data/logs/cluster/{rule}.{wildcards}.out",
+        "error" : "/scratch/users/alavertu/snakemake-ukb-exome/data/logs/cluster/{rule}.{wildcards}.err"
 
     }
+
 }
