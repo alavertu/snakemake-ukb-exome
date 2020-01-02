@@ -14,7 +14,7 @@ rule sort_sam:
     output:
          "data/sam_files/{sample}.sorted.sam"
     shell:
-        "samtools collate {input} > {output}"
+        "samtools collate {input} -O > {output}"
 
 rule sam_to_fastq:
     input:
