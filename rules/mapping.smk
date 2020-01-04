@@ -12,13 +12,13 @@ rule sort_sam:
     input:
          "data/sam_files/{sample}.sam"
     output:
-         "data/sam_files/{sample}.sorted.sam"
+         "data/sam_files/{sample}.sorted.bam"
     shell:
-        "samtools collate {input} -O > {output}"
+        "samtools collate {input} -o {output}"
 
 rule sam_to_fastq:
     input:
-         "data/sam_files/{sample}.sorted.sam"
+         "data/sam_files/{sample}.sorted.bam"
     output:
           single="data/fastq/{sample}.sorted.single",
           pe1="data/fastq/{sample}.sorted.1.fq",
