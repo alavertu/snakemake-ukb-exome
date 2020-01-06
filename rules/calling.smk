@@ -7,7 +7,7 @@ if "restrict-regions" in config["processing"]:
         conda:
             "../envs/bedops.yaml"
         shell:
-            "bedextract {wildcards.contig} {input} > {output}"
+            'bedextract "{wildcards.contig}" "{input}" > "{output}"'
 
 
 rule call_variants:

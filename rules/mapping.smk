@@ -13,8 +13,10 @@ rule sort_sam:
          "data/sam_files/{sample}.sam"
     output:
          "data/sam_files/{sample}.sorted.bam"
+    params:
+        prefix='data/sam_files/{sample}.sorted'
     shell:
-        "samtools collate {input} -o {output}"
+        "samtools collate {input} {params.prefix}"
 
 rule sam_to_fastq:
     input:
@@ -32,6 +34,8 @@ rule trim_reads_pe:
     output:
         r1=temp("data/trimmed/{sample}.1.fastq.gz"),
         r2=temp("data/trimmed/{sample}.2.fastq.gz"),
+        r1_unpaired=temp("data/trimmed/{sample}.1.unpaired.fastq.gz"),
+        r2_unpaired=temp("data/trimmed/{sample}.2.unpaired.fastq.gz"),
         trimlog="data/trimmed/{sample}.trimlog.txt"
     params:
         extra=lambda w, output: "-trimlog {}".format(output.trimlog),

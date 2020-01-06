@@ -4,12 +4,11 @@
         "account" : "alavertu",
         "time" : "12:00:00",
         "n" : 1,
-        "partition" : "owners,rbaltman,normal",
+        "partition" : "rbaltman",
         "mem" : "20G",
         "name" : "ukb_exome.{rule}.{wildcards}",
         "out" : "/scratch/users/alavertu/snakemake-ukb-exome/data/logs/cluster/{rule}.{wildcards}.out",
         "error" : "/scratch/users/alavertu/snakemake-ukb-exome/data/logs/cluster/{rule}.{wildcards}.err"
-
     }
 
 }

@@ -2,9 +2,12 @@ samples: samples.tsv
 units: units.tsv
 
 ref:
-  name: GRCh38.86
+  name: GRCh38
   # Path to the reference genome, ideally as it is provided by the GATK bundle.
-  genome: /oak/stanford/groups/rbaltman/references/GRCh38/GRCh38_full_analysis_set_plus_decoy_hla.fa
+#  genome: /oak/stanford/groups/rbaltman/references/GRCh38/GRCh38_full_analysis_set_plus_decoy_hla.fa
+  # Other reference, as used for the SPB pipeline
+  # http://biobank.ctsu.ox.ac.uk/showcase/refer.cgi?id=838
+  genome: /oak/stanford/groups/rbaltman/ukbiobank/resources/exome/SPB_ref/genome.fa
   # Path to any database of known variants, ideally as it is provided by the GATK bundle.
   known-variants: /oak/stanford/groups/rbaltman/references/GATK_BQSR_known_sites_hg38/dbsnp_146.hg38.vcf.gz
 
@@ -27,7 +30,8 @@ processing:
   remove-duplicates: true
   # Uncomment and point to a bed file with, e.g., captured regions if necessary,
   # see https://gatkforums.broadinstitute.org/gatk/discussion/4133/when-should-i-use-l-to-pass-in-a-list-of-intervals.
-  restrict-regions: /oak/stanford/groups/rbaltman/ukbiobank/resources/exome/exome_target_regions.hg38.bed
+  # Exome region source: http://biobank.ctsu.ox.ac.uk/showcase/refer.cgi?id=3801
+  restrict-regions: /oak/stanford/groups/rbaltman/ukbiobank/resources/exome/xgen_plus_spikein.b38.bed
   # If regions are restricted, uncomment this to enlarge them by the given value in order to include
   # flanking areas.
   region-padding: 100
