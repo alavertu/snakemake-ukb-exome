@@ -4,7 +4,7 @@ rule revert_cram_to_sam:
     output:
         "data/sam_files/{sample}.sam"
     params:
-        "-h -t /oak/stanford/groups/rbaltman/references/GRCh38/GRCh38_full_analysis_set_plus_decoy_hla.fa.fai" # optional params string
+        "-h -t " + config["ref"]["genome"] + ".fai" # optional params string
     wrapper:
         "0.43.1/bio/samtools/view"
 
