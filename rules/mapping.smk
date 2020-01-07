@@ -50,17 +50,29 @@ rule map_reads:
     input:
         reads=get_trimmed_reads
     output:
-        temp("data/mapped/{sample}.sorted.bam")
+        temp("data/mapped/{sample}.bam")
     log:
         "data/logs/bwa_mem/{sample}.log"
     params:
         index=config["ref"]["genome"],
         extra=get_read_group,
-        sort="samtools",
+        sort="none",
         sort_order="coordinate"
     threads: 8
     wrapper:
         "0.27.1/bio/bwa/mem"
+
+rule sort_aligned_bam:
+    input:
+         "data/mapped/{sample}.bam"
+    output:
+          temp("data/mapped/{sample}.sorted.bam")
+    params:
+        "-m 50G"
+    threads:
+        8
+    wrapper:
+           "0.45.1/bio/samtools/sort"
 
 
 rule mark_duplicates:
