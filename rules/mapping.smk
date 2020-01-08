@@ -68,9 +68,9 @@ rule sort_aligned_bam:
     output:
           temp("data/mapped/{sample}.sorted.bam")
     params:
-        "-m 50G"
+        "-m 12G"
     threads:
-        8
+        4
     wrapper:
            "0.45.1/bio/samtools/sort"
 
@@ -110,5 +110,5 @@ rule samtools_index:
         "{prefix}.bam"
     output:
         "{prefix}.bam.bai"
-    wrapper:
-        "0.27.1/bio/samtools/index"
+    shell:
+        "samtools index {input}"
