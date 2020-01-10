@@ -4,16 +4,11 @@ include: "rules/common.smk"
 
 rule all:
     input:
-        "data/annotated/all.vcf.gz",
-        "data/qc/multiqc.html",
-        "data/plots/depths.svg",
-        "data/plots/allele-freqs.svg"
-
+        "data/genotyped/all.vcf.gz",
 
 ##### Modules #####
 
 include: "rules/mapping.smk"
 include: "rules/calling.smk"
 include: "rules/filtering.smk"
-include: "rules/stats.smk"
 include: "rules/qc.smk"
