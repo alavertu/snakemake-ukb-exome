@@ -107,8 +107,10 @@ rule recalibrate_base_qualities:
 
 rule samtools_index:
     input:
-        "{prefix}.bam"
+        "data/dedup/{sample}.bam"
     output:
-        "{prefix}.bam.bai"
+        "data/dedup/{sample}.bam.bai"
+    log:
+       "data/logs/picard/dedup/{sample}_indexing.log"
     shell:
         "samtools index {input}"
