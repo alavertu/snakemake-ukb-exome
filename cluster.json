@@ -2,13 +2,36 @@
     "__default__" :
     {
         "account" : "alavertu",
-        "time" : "12:00:00",
+        "time" : "2:00:00",
         "n" : 1,
-        "partition" : "rbaltman",
+        "partition" : "rbaltman,owners,normal",
         "mem" : "20G",
         "name" : "ukb_exome.{rule}.{wildcards}",
-        "out" : "/scratch/users/alavertu/snakemake-ukb-exome/data/logs/cluster/{rule}.{wildcards}.out",
-        "error" : "/scratch/users/alavertu/snakemake-ukb-exome/data/logs/cluster/{rule}.{wildcards}.err"
+        "out" : "/scratch/users/alavertu/snakemake-ukb-exome/clust_logs/{rule}.{wildcards}.out",
+        "error" : "/scratch/users/alavertu/snakemake-ukb-exome/clust_logs/{rule}.{wildcards}.err"
+    },
+    "compose_regions":
+    {
+        "time": "0:10:00",
+        "mem": "5G",
+        "partition":"rbaltman"
+    },
+    "map_reads":
+    {
+    "mem" : "64G"
+    },
+    "sort_aligned_bam":
+    {
+    "mem":"64G"
+    },
+    "call_variants":
+    {
+    "mem":"64G",
+    "time": "8:00:00"
+    },
+    "genotype_variants":
+    {
+    "mem":"64G",
+    "time": "8:00:00"
     }
-
 }

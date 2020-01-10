@@ -4,7 +4,7 @@ units: units.tsv
 ref:
   name: GRCh38
   # Path to the reference genome, ideally as it is provided by the GATK bundle.
-#  genome: /oak/stanford/groups/rbaltman/references/GRCh38/GRCh38_full_analysis_set_plus_decoy_hla.fa
+  #genome: /oak/stanford/groups/rbaltman/references/GRCh38/GRCh38_full_analysis_set_plus_decoy_hla.fa
   # Other reference, as used for the SPB pipeline
   # http://biobank.ctsu.ox.ac.uk/showcase/refer.cgi?id=838
   genome: /oak/stanford/groups/rbaltman/ukbiobank/resources/exome/SPB_ref/genome.fa
@@ -34,7 +34,7 @@ processing:
   restrict-regions: /oak/stanford/groups/rbaltman/ukbiobank/resources/exome/xgen_plus_spikein.b38.bed
   # If regions are restricted, uncomment this to enlarge them by the given value in order to include
   # flanking areas.
-  region-padding: 100
+  region-padding: "100"
 
 params:
   gatk:
