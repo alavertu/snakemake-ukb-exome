@@ -40,7 +40,7 @@ def get_cram(wildcards):
 
 def get_fastq(wildcards):
     """Get all aligned reads of given sample."""
-    return {"r1": "data/fastq/{sample}.sorted.1.fq".format(sample=wildcards.sample), "r2": "data/fastq/{sample}.sorted.2.fq".format(sample=wildcards.sample)}
+    return ["data/fastq/{sample}.sorted.1.fq".format(sample=wildcards.sample), "data/fastq/{sample}.sorted.2.fq".format(sample=wildcards.sample)]
 
 def get_read_group(wildcards):
     """Denote sample name and platform in read group."""

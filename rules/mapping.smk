@@ -2,7 +2,7 @@ rule revert_cram_to_sam:
     input:
         get_cram
     output:
-        "data/sam_files/{sample}.sam"
+        temp("data/sam_files/{sample}.sam")
     params:
         "-h -t " + config["ref"]["genome"] + ".fai" # optional params string
     wrapper:
@@ -12,7 +12,7 @@ rule sort_sam:
     input:
          "data/sam_files/{sample}.sam"
     output:
-         "data/sam_files/{sample}.sorted.bam"
+         temp("data/sam_files/{sample}.sorted.bam")
     params:
         prefix='data/sam_files/{sample}.sorted'
     shell:
@@ -22,33 +22,33 @@ rule sam_to_fastq:
     input:
          "data/sam_files/{sample}.sorted.bam"
     output:
-          single="data/fastq/{sample}.sorted.single",
-          pe1="data/fastq/{sample}.sorted.1.fq",
-          pe2="data/fastq/{sample}.sorted.2.fq"
+          single=temp("data/fastq/{sample}.sorted.single"),
+          pe1=temp("data/fastq/{sample}.sorted.1.fq"),
+          pe2=temp("data/fastq/{sample}.sorted.2.fq")
     shell:
          "samtools fastq -s {output.single} -1 {output.pe1} -2 {output.pe2} {input}"
 
-rule trim_reads_pe:
-    input:
-        unpack(get_fastq)
-    output:
-        r1=temp("data/trimmed/{sample}.1.fastq.gz"),
-        r2=temp("data/trimmed/{sample}.2.fastq.gz"),
-        r1_unpaired=temp("data/trimmed/{sample}.1.unpaired.fastq.gz"),
-        r2_unpaired=temp("data/trimmed/{sample}.2.unpaired.fastq.gz"),
-        trimlog="data/trimmed/{sample}.trimlog.txt"
-    params:
-        extra=lambda w, output: "-trimlog {}".format(output.trimlog),
-        **config["params"]["trimmomatic"]["pe"]
-    log:
-        "data/logs/trimmomatic/{sample}.log"
-    wrapper:
-        "0.30.0/bio/trimmomatic/pe"
+# rule trim_reads_pe:
+#     input:
+#         unpack(get_fastq)
+#     output:
+#         r1=temp("data/trimmed/{sample}.1.fastq.gz"),
+#         r2=temp("data/trimmed/{sample}.2.fastq.gz"),
+#         r1_unpaired=temp("data/trimmed/{sample}.1.unpaired.fastq.gz"),
+#         r2_unpaired=temp("data/trimmed/{sample}.2.unpaired.fastq.gz"),
+#         trimlog="data/trimmed/{sample}.trimlog.txt"
+#     params:
+#         extra=lambda w, output: "-trimlog {}".format(output.trimlog),
+#         **config["params"]["trimmomatic"]["pe"]
+#     log:
+#         "data/logs/trimmomatic/{sample}.log"
+#     wrapper:
+#         "0.30.0/bio/trimmomatic/pe"
 
 
 rule map_reads:
     input:
-        reads=get_trimmed_reads
+        reads=get_fastq
     output:
         temp("data/mapped/{sample}.bam")
     log:
@@ -58,7 +58,7 @@ rule map_reads:
         extra=get_read_group,
         sort="none",
         sort_order="coordinate"
-    threads: 8
+    threads: 4
     wrapper:
         "0.27.1/bio/bwa/mem"
 
@@ -109,7 +109,7 @@ rule samtools_index:
     input:
         "data/dedup/{sample}.bam"
     output:
-        "data/dedup/{sample}.bam.bai"
+        temp("data/dedup/{sample}.bam.bai")
     log:
        "data/logs/picard/dedup/{sample}_indexing.log"
     shell:

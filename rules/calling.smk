@@ -9,7 +9,7 @@ rule call_variants:
     log:
         "data/logs/gatk/haplotypecaller/{sample}.log"
     params:
-        java_opts="-Xmx50g",
+        java_opts="-Xmx50g -Djava.io.tmpdir=/scratch/users/alavertu/jav_temp",
         extra=" -L " + config["processing"].get("restrict-regions") + " --interval-padding " + config["processing"].get("region-padding")
     wrapper:
         "0.27.1/bio/gatk/haplotypecaller"
@@ -23,9 +23,11 @@ rule combine_calls:
         gvcf="data/called/all.g.vcf.gz"
     log:
         "data/logs/gatk/combinegvcfs.log"
+    params:
+        java_opts="-Xmx50g -Djava.io.tmpdir=/scratch/users/alavertu/jav_temp",
+        extra=" -L " + config["processing"].get("restrict-regions") + " --interval-padding " + config["processing"].get("region-padding")
     wrapper:
         "0.27.1/bio/gatk/combinegvcfs"
-
 
 rule genotype_variants:
     input:
@@ -34,7 +36,7 @@ rule genotype_variants:
     output:
         vcf="data/genotyped/all.vcf.gz"
     params:
-          java_opts="-Xmx50g",
+          java_opts="-Xmx50g -Djava.io.tmpdir=/scratch/users/alavertu/jav_temp",
           extra=" -L " + config["processing"].get("restrict-regions") + " --interval-padding " + config["processing"].get("region-padding")
     log:
         "data/logs/gatk/genotypegvcfs.log"

@@ -2,7 +2,7 @@
     "__default__" :
     {
         "account" : "alavertu",
-        "time" : "2:00:00",
+        "time" : "6:00:00",
         "n" : 1,
         "partition" : "rbaltman,owners,normal",
         "mem" : "20G",
@@ -18,7 +18,7 @@
     },
     "map_reads":
     {
-    "mem" : "64G"
+    "mem" : "100G"
     },
     "sort_aligned_bam":
     {
@@ -26,12 +26,16 @@
     },
     "call_variants":
     {
-    "mem":"64G",
+    "mem":"100G",
     "time": "8:00:00"
+    },
+    "combine_calls":
+    {
+    "mem":"100G"
     },
     "genotype_variants":
     {
-    "mem":"64G",
+    "mem":"100G",
     "time": "8:00:00"
     }
 }

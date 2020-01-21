@@ -31,7 +31,7 @@ processing:
   # Uncomment and point to a bed file with, e.g., captured regions if necessary,
   # see https://gatkforums.broadinstitute.org/gatk/discussion/4133/when-should-i-use-l-to-pass-in-a-list-of-intervals.
   # Exome region source: http://biobank.ctsu.ox.ac.uk/showcase/refer.cgi?id=3801
-  restrict-regions: /oak/stanford/groups/rbaltman/ukbiobank/resources/exome/xgen_plus_spikein.b38.bed
+  restrict-regions: /oak/stanford/groups/rbaltman/ukbiobank/resources/exome/xgen_plus_spikein.b38.pgx_only.bed
   # If regions are restricted, uncomment this to enlarge them by the given value in order to include
   # flanking areas.
   region-padding: "100"

@@ -48,7 +48,7 @@ properties:
       restrict-regions:
         type: string
       region-padding:
-        type: integer
+        type: string
     required:
       - remove-duplicates
 
