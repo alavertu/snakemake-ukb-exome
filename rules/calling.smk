@@ -20,7 +20,7 @@ rule combine_calls:
         ref=config["ref"]["genome"],
         gvcfs=expand("data/called/{sample}.g.vcf.gz", sample=samples.index)
     output:
-        gvcf="data/called/all.g.vcf.gz"
+        gvcf="data/called/" + config["run"]["group"] + ".g.vcf.gz"
     log:
         "data/logs/gatk/combinegvcfs.log"
     params:
@@ -32,9 +32,9 @@ rule combine_calls:
 rule genotype_variants:
     input:
         ref=config["ref"]["genome"],
-        gvcf="data/called/all.g.vcf.gz"
+        gvcf="data/called/" + config["run"]["group"] +".g.vcf.gz"
     output:
-        vcf="data/genotyped/all.vcf.gz"
+        vcf="data/genotyped/" + config["run"]["group"] + ".vcf.gz"
     params:
           java_opts="-Xmx50g -Djava.io.tmpdir=/scratch/users/alavertu/jav_temp",
           extra=" -L " + config["processing"].get("restrict-regions") + " --interval-padding " + config["processing"].get("region-padding")

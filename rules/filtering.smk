@@ -6,9 +6,9 @@ def get_vartype_arg(wildcards):
 rule select_calls:
     input:
         ref=config["ref"]["genome"],
-        vcf="data/genotyped/all.vcf.gz"
+        vcf="data/genotyped/" + config["run"]["group"] + ".vcf.gz"
     output:
-        vcf=temp("data/filtered/all.{vartype}.vcf.gz")
+        vcf=temp("data/filtered/" + config["run"]["group"] + ".{vartype}.vcf.gz")
     params:
         extra=get_vartype_arg
     log:
@@ -26,9 +26,9 @@ def get_filter(wildcards):
 rule hard_filter_calls:
     input:
         ref=config["ref"]["genome"],
-        vcf="data/filtered/all.{vartype}.vcf.gz"
+        vcf="data/filtered/" + config["run"]["group"] + ".{vartype}.vcf.gz"
     output:
-        vcf=temp("data/filtered/all.{vartype}.hardfiltered.vcf.gz")
+        vcf=temp("data/filtered/" + config["run"]["group"] + ".{vartype}.hardfiltered.vcf.gz")
     params:
         filters=get_filter
     log:
@@ -39,9 +39,9 @@ rule hard_filter_calls:
 
 rule recalibrate_calls:
     input:
-        vcf="data/filtered/all.{vartype}.vcf.gz"
+        vcf="data/filtered/" + config["run"]["group"] + ".{vartype}.vcf.gz"
     output:
-        vcf=temp("data/filtered/all.{vartype}.recalibrated.vcf.gz")
+        vcf=temp("data/filtered/" + config["run"]["group"] + ".{vartype}.recalibrated.vcf.gz")
     params:
         extra=config["params"]["gatk"]["VariantRecalibrator"]
     log:
@@ -52,13 +52,13 @@ rule recalibrate_calls:
 
 rule merge_calls:
     input:
-        vcf=expand("data/filtered/all.{vartype}.{filtertype}.vcf.gz",
+        vcf=expand("data/filtered/" + config["run"]["group"] + ".{vartype}.{filtertype}.vcf.gz",
                    vartype=["snvs", "indels"],
                    filtertype="recalibrated"
                               if config["filtering"]["vqsr"]
                               else "hardfiltered")
     output:
-        vcf="data/filtered/all.vcf.gz"
+        vcf="data/filtered/" + config["run"]["group"] + ".vcf.gz"
     log:
         "data/logs/picard/merge-filtered.log"
     wrapper:

@@ -10,11 +10,8 @@ report: "../report/workflow.rst"
 configfile: "config.yaml"
 validate(config, schema="../schemas/config.schema.yaml")
 
-samples = pd.read_table(config["samples"]).set_index("sample", drop=False)
+samples = pd.read_table("/scratch/groups/rbaltman/ukbiobank/" + config["run"]["group"] + "_samples.txt").set_index("sample", drop=False)
 validate(samples, schema="../schemas/samples.schema.yaml")
-
-units = pd.read_table(config["units"], dtype=str).set_index(["sample"], drop=False)  # enforce str in index
-validate(units, schema="../schemas/units.schema.yaml")
 
 
 ##### Wildcard constraints #####
@@ -35,8 +32,8 @@ def get_contigs():
                          header=None, usecols=[0], squeeze=True, dtype=str)
 
 def get_cram(wildcards):
-    df = units.loc[wildcards.sample, ["cram"]].dropna()
-    return(df['cram'])
+    cramPath = "/scratch/groups/rbaltman/ukbiobank/" + config["run"]["group"] + "/" + wildcards.sample + ".cram"
+    return(cramPath)
 
 def get_fastq(wildcards):
     """Get all aligned reads of given sample."""
@@ -46,7 +43,7 @@ def get_read_group(wildcards):
     """Denote sample name and platform in read group."""
     return r"-M -R '@RG\tID:{sample}\tSM:{sample}\tPL:{platform}'".format(
         sample=wildcards.sample,
-        platform=units.loc[(wildcards.sample), "platform"])
+        platform=config["run"]["platform"])
 
 def get_trimmed_reads(wildcards):
     """Get trimmed reads of given sample-unit."""

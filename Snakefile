@@ -4,7 +4,7 @@ include: "rules/common.smk"
 
 rule all:
     input:
-        "data/genotyped/all.vcf.gz",
+         "data/filtered/" + config["run"]["group"] + ".vcf.gz"
 
 ##### Modules #####
 

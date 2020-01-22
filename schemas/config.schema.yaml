@@ -5,10 +5,9 @@ description: snakemake configuration file
 type: object
 
 properties:
-  samples:
-    type: string
-  units:
-    type: string
+  run:
+    group: string
+    platform: string
 
   ref:
     type: object
@@ -83,8 +82,7 @@ properties:
       - picard
 
 required:
-  - samples
-  - units
+  - run
   - ref
   - filtering
   - processing
